@@ -14,7 +14,7 @@
 ## Installation
 
 ```
-composer require lupennat/items
+composer require lupennat/nested-form
 ```
 
 ## Usage
