@@ -29,7 +29,7 @@
                 </ul>
             </div>
             <template v-for="(child, childIndex) in field.children" :key="`${resourceName}-${child.id || child.key}`">
-                <div class="mb-4 nested-form-container" v-if="isActiveTab(childIndex)">
+                <div class="mb-4" v-if="isActiveTab(childIndex)">
                     <div class="divide-gray-100 divide-y px-6">
                         <component
                             v-for="(childField, childFieldIndex) in child.fields"
@@ -50,7 +50,7 @@
     <template v-else>
         <Card
             v-for="(child, childIndex) in field.children"
-            class="mb-4"
+            class="mb-4 nested-form-container"
             :key="`${resourceName}-${child.id || child.key}`"
         >
             <Heading

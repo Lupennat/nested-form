@@ -597,9 +597,22 @@ class NestedForm extends Field implements BehavesAsPanel, RelatableField
      */
     protected function getRelatedKeys(NovaRequest $request)
     {
-        $field = collect(Nova::resourceInstanceForKey($this->resourceName)->fields($request))->first(function ($field) {
-            return $this->isRelatedField($field);
-        });
+        $field = collect(Nova::resourceInstanceForKey($this->resourceName)->fields($request))
+            ->map(function ($field) {
+                if ($field instanceof Panel) {
+                    return collect($field->data)->map(function ($field) {
+                        $field->panel = null;
+
+                        return $field;
+                    })->values();
+                }
+
+                return $field;
+            })
+            ->flatten()
+            ->first(function ($field) {
+                return $this->isRelatedField($field);
+            });
 
         if (!$field) {
             throw new \Exception(__('A field defining the inverse relationship needs to be set on your related resource (e.g. MorphTo, BelongsTo, BelongsToMany...)'));
