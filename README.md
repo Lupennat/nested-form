@@ -66,8 +66,6 @@ class User extends Resource
     }
 ```
 
-
-
 ## Depends On
 
 NestedForm support Nova `dependsOn`.
@@ -134,7 +132,7 @@ class Posts extends Resource
 | `->max(int)`                   | limit number of related resources allowed              | 0                         |
 | `->min(int)`                   | minimum number of related resources                    | 0                         |
 | `->lock()`                     | disable add and remove related resources               | false                     |
-| `->prefill(array)`             | [prefill](#prefill) related resources with values      | []                        |
+| `->prefill(array,bool)`        | [prefill](#prefill) related resources with values      | [], false                 |
 | `->useTabs()`                  | switch display mode to tabs instead of panels          | false                     |
 | `->activeTab(int)`             | set default active tab by index                        | 0                         |
 | `->activeTabByHeading(string)` | set default active tab by 'heading'                    | null                      |
@@ -159,6 +157,16 @@ NestedForm::make('Posts', Post::class)
         ['title' => 'first post', 'section' => 'sport'],
         ['title' => 'second post', 'section' => 'news'],
     ])
+```
+
+You can force prefill to always respect the numbers of prefilled items through a second boolean parameter.
+
+```php
+NestedForm::make('Posts', Post::class)
+    ->prefill([
+        ['title' => 'first post', 'section' => 'sport'],
+        ['title' => 'second post', 'section' => 'news'],
+    ], true)
 ```
 
 ### Custom Heading
