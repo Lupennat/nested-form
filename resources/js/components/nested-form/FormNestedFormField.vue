@@ -442,9 +442,9 @@
                     }
 
                     if (!this.resourceId && this.currentField.forcePrefill) {
-                        for (let x = this.children.length; x < this.prefill.length; x++) {
+                        for (let x = this.children.length; x < this.currentField.prefill.length; x++) {
                             const child = this.generateNewChild();
-                            this.children.push(this.addPrefill(child, this.prefill[x]));
+                            this.children.push(this.addPrefill(child, this.currentField.prefill[x]));
                         }
                     }
                 }
