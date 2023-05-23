@@ -380,21 +380,24 @@
                     }
                     for (const prefill of this.currentField.prefill) {
                         const child = this.generateNewChild();
-                        for (let x = 0; x < child.fields.length; x++) {
-                            const attribute = child.fields[x].attribute.replace(child.attribute, '');
-                            if (attribute in prefill) {
-                                if (child.fields[x].conditionalField) {
-                                    child.fields[x].conditionalField.value = prefill[attribute];
-                                } else {
-                                    child.fields[x].value = prefill[attribute];
-                                }
-                            }
-                        }
-                        this.children.push(child);
+                        this.children.push(this.addPrefill(child, prefill));
                     }
                 } else {
                     this.children = JSON.parse(JSON.stringify(this.currentField.children));
                 }
+            },
+            addPrefill(child, prefill) {
+                for (let x = 0; x < child.fields.length; x++) {
+                    const attribute = child.fields[x].attribute.replace(child.attribute, '');
+                    if (attribute in prefill) {
+                        if (child.fields[x].conditionalField) {
+                            child.fields[x].conditionalField.value = prefill[attribute];
+                        } else {
+                            child.fields[x].value = prefill[attribute];
+                        }
+                    }
+                }
+                return child;
             },
 
             assignDefaultTab() {
@@ -421,12 +424,28 @@
                 if (this.children.length === 0) {
                     this.assignDefaultChildren();
                 } else {
+                    if (
+                        !this.resourceId &&
+                        this.currentField.forcePrefill &&
+                        this.currentField.prefill.length > 0 &&
+                        this.currentField.prefill.length < this.children.length
+                    ) {
+                        this.children = this.children.slice(0, this.currentField.prefill.length);
+                    }
+
                     for (let x = 0; x < this.children.length; x++) {
                         this.children.splice(
                             x,
                             1,
                             this.updateChildrenFromSchema(this.currentField, this.children[x], x)
                         );
+                    }
+
+                    if (!this.resourceId && this.currentField.forcePrefill) {
+                        for (let x = this.children.length; x < this.prefill.length; x++) {
+                            const child = this.generateNewChild();
+                            this.children.push(this.addPrefill(child, this.prefill[x]));
+                        }
                     }
                 }
             },

@@ -150,6 +150,11 @@ class NestedForm extends Field implements BehavesAsPanel, RelatableField
     public $prefill = [];
 
     /**
+     * Force Prefill.
+     */
+    public $forcePrefill = false;
+
+    /**
      * Style Relationship as Tabs.
      *
      *  @var bool
@@ -368,9 +373,10 @@ class NestedForm extends Field implements BehavesAsPanel, RelatableField
      *
      * @return $this
      */
-    public function prefill($prefill)
+    public function prefill($prefill, bool $force = false)
     {
         $this->min = 0;
+        $this->forcePrefill = $force;
         $this->prefill = array_map(function ($item) {
             return array_reduce(array_keys($item), function ($carry, $key) use ($item) {
                 $carry['[' . $key . ']'] = $item[$key];
@@ -825,6 +831,7 @@ class NestedForm extends Field implements BehavesAsPanel, RelatableField
                 'viaResource' => $this->viaResource,
                 'keyName' => $this->keyName,
                 'prefill' => $this->prefill,
+                'forcePrefill' => $this->forcePrefill,
                 'min' => $this->min,
                 'max' => $this->isManyRelationsip() ? $this->max : 1,
                 'locked' => $this->locked,
