@@ -5,6 +5,7 @@
 5. [Additional options](#additional-options)
    1. [Prefill](#prefill)
    2. [Custom Heading](#custom-heading)
+6. [Credits](#credits)
 
 ## Requirements
 
