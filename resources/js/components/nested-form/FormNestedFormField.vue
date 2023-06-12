@@ -761,6 +761,9 @@
                         indexLength
                     );
                 } else {
+                    if (field.component === 'boolean-field') {
+                        value = value == '0' ? false : true;
+                    }
                     field.value = value !== undefined ? (value === '' ? null : value) : field.value;
                 }
 
