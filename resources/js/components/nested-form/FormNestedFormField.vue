@@ -247,16 +247,24 @@
                     <p class="px-8 text-red-500" v-if="modalError">
                         {{ modalError }}
                     </p>
+                    <p class="px-8 text-green-500" v-if="isCreated">
+                        {{ __(`${currentField.singularLabel} successfully created.`) }}
+                    </p>
                 </div>
                 <ModalFooter>
                     <div class="flex items-center ml-auto">
-                        <CancelButton component="button" type="button" class="ml-auto" @click="closeModal">
-                            {{ __('Cancel') }}
+                        <CancelButton
+                            component="button"
+                            type="button"
+                            class="ml-auto"
+                            :disabled="isWorking"
+                            @click="closeModal"
+                        >
+                            {{ __('Close') }}
                         </CancelButton>
-
-                        <DefaultButton type="button" dusk="confirm-action-button" class="ml-2" @click="addToChildren">
+                        <LoadingButton type="button" @click="addToChildren" :disabled="isWorking" :loading="isWorking">
                             {{ __('Add') }}
-                        </DefaultButton>
+                        </LoadingButton>
                     </div>
                 </ModalFooter>
             </div>
@@ -307,7 +315,10 @@
                 childToAdd: null,
                 modalError: '',
                 children: [],
-                updateKey: 0
+                updateKey: 0,
+                isWorking: false,
+                isCreated: false,
+                createdTimeout: null
             };
         },
         computed: {
@@ -580,6 +591,8 @@
             },
 
             addToChildren() {
+                this.isCreated = false;
+                this.isWorking = true;
                 this.modalError = '';
                 const newHeadingFieldsAttributes = this.getFieldsHeadingAttributes(this.childToAdd);
                 const formdata = new FormData();
@@ -598,6 +611,7 @@
                         : '';
 
                 if (this.modalError) {
+                    this.isWorking = false;
                     return;
                 }
 
@@ -626,6 +640,7 @@
                 this.modalError = notUnique ? this.__('Field Values Already Taken') : '';
 
                 if (this.modalError) {
+                    this.isWorking = false;
                     return;
                 }
 
@@ -643,10 +658,17 @@
 
                 this.setActive(this.children.length - 1);
                 this.modalError = '';
-                this.childToAdd = null;
+                this.addChild();
+                this.isWorking = false;
+                this.isCreated = true;
+                this.createdTimeout = setTimeout(() => {
+                    this.isCreated = false;
+                }, 1500);
             },
 
             closeModal() {
+                clearTimeout(this.createdTimeout);
+                this.isCreated = false;
                 this.modalError = '';
                 this.childToAdd = null;
             },
