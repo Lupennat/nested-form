@@ -1,3 +1,5 @@
+this repository will no longer have updates, a new version of the package is available [here](https://github.com/Lupennat/nova-nested-many)
+
 1. [Requirements](#Requirements)
 2. [Installation](#Installation)
 3. [Usage](#Usage)
